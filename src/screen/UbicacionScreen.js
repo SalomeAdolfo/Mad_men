@@ -37,7 +37,7 @@ export default function UbicacionScreen() {
           elevation: 10,
           width: '80%',
           height: '50%',
-          shadowColor: 'yellow'
+          shadowColor: 'black'
         }}>
             <Image source={{uri: ("https://th.bing.com/th/id/OIP.uf9Tfjap5j0FoB8Ljfm9OQHaFE?pid=ImgDet&rs=1")}} style={{width: '100%', height:'100%'}}/>
         </Card>
