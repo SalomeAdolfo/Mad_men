@@ -7,6 +7,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {Madoka} from 'react-native-textinput-effects';
 import {useNavigation} from '@react-navigation/native';
 import app from '../../App';
+import MapView from 'react-native-maps';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,8 +40,15 @@ export default function UbicacionScreen() {
           height: '50%',
           shadowColor: 'black'
         }}>
-            <Image source={{uri: ("https://th.bing.com/th/id/OIP.uf9Tfjap5j0FoB8Ljfm9OQHaFE?pid=ImgDet&rs=1")}} style={{width: '100%', height:'100%'}}/>
-        </Card>
+          <MapView 
+          initialRegion={{
+            latitude: 37.78825, 
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+          }}
+          />
+            </Card>
     </View>
   );
 }
