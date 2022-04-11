@@ -1,77 +1,66 @@
-import {Text, View, Image, StyleSheet} from 'react-native';
-import React from 'react';
-import {Button, Card} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {NavigationContainer} from '@react-navigation/native';
-import {Madoka} from 'react-native-textinput-effects';
-import {useNavigation} from '@react-navigation/native';
-import { ListItem, Avatar } from 'react-native-elements';
+import {Text, View, FlatList, TouchableOpacity, Image} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Card, Button} from 'react-native-elements';
+import baseURL from '../routes/api';
 
+const url = '/api/psicologos';
 //Defino las rutas para la navegacion por rutas.
-
-const list = [
-    {
-      name: 'Messi',
-      avatar_url: 'https://1.bp.blogspot.com/-OUebPguwgA0/XYiWweITVOI/AAAAAAAAAxQ/jTufpkAV90QvGHKWSNsXBaJ7ji9qQ7hlwCEwYBhgL/s1600/h901xxccv6831.jpg',
-      subtitle: 'Psicología clínica'
-    },
-    {
-      name: 'Chayane chiquito',
-      avatar_url: 'https://th.bing.com/th/id/OIP.dpVRFme7QRaHLXvclLY46AHaHa?pid=ImgDet&rs=1',
-      subtitle: 'Psicología educativa'
-    },
-    {
-        name: 'Andrew Garfield',
-        avatar_url: 'https://th.bing.com/th/id/R.f9cd739664d097c6ca62acf1192eaab6?rik=aQR3kaebmc8Bug&riu=http%3a%2f%2fimage.tmdb.org%2ft%2fp%2foriginal%2fmUzapkiUn2kp17yedwoeAa2rK8C.jpg&ehk=Xy1B1YvuAoQGAZbjGdAYZwqWSqqaCMnY9P6vSIt5WDI%3d&risl=&pid=ImgRaw&r=0',
-        subtitle: 'Psicología organizacional'
-    },
-    {
-        name: 'Messi',
-        avatar_url: 'https://1.bp.blogspot.com/-OUebPguwgA0/XYiWweITVOI/AAAAAAAAAxQ/jTufpkAV90QvGHKWSNsXBaJ7ji9qQ7hlwCEwYBhgL/s1600/h901xxccv6831.jpg',
-        subtitle: 'Psicología clínica'
-      },
-      {
-        name: 'Messi',
-        avatar_url: 'https://1.bp.blogspot.com/-OUebPguwgA0/XYiWweITVOI/AAAAAAAAAxQ/jTufpkAV90QvGHKWSNsXBaJ7ji9qQ7hlwCEwYBhgL/s1600/h901xxccv6831.jpg',
-        subtitle: 'Psicología clínica'
-      }
-  ]
-
 export default function UbicacionScreen() {
-
+  const [isLoading, setLoading] = useState(true);
+  const [info, setInfo] = useState([]);
+  function getId(id){
+    console.log(id)
+  }
+  const getPsicologos = async () => {
+    try {
+      const response = await fetch(baseURL + url);
+      const json = await response.json();
+      setInfo(json.data);
+      console.log(json.data);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    getPsicologos();
+  }, []);
   return (
     <View
       style={{
         flex: 1,
         width: '100%',
-        justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Text
-        style={{
-          top: '-18%',
-          fontSize: 35,
-          fontWeight: 'bold',
-          color: '#cb997e',
-        }}>
-        Contactos
-      </Text>
+      <View>
+        <Text
+          style={{
+            top: '-18%',
+            fontSize: 35,
+            fontWeight: 'bold',
+            color: '#cb997e',
+          }}>
+          Contactos
+        </Text>
+      </View>
 
-      
-  {
-    list.map((l, i) => (
-      <ListItem key={i} bottomDivider style={{backgroundColor: 'yellow', width: '80%', borderRadius: 25}}>
-        <Avatar source={{uri: l.avatar_url}} size={50} />
-        <ListItem.Content>
-          <ListItem.Title>{l.name}</ListItem.Title>
-          <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
-        </ListItem.Content>
-      </ListItem>
-    ))
-  }
-
-
+      <FlatList
+        data={info}
+        keyExtractor={({id}, index) => id}
+        renderItem={({item}) => (
+          <View>
+            <Card containerStyle={{borderRadius:15, elevation:15, shadowColor:'#00BFFF'}}>
+              <Image source={require('../../assets/img/background_main.jpg')} style={{width:100, height:100, alignSelf:'center', borderRadius: 50}}/>
+              <Text style={{color: 'black', alignSelf:'center', fontWeight: '200'}}>
+                {item.nombre} {item.apellido_paterno} {item.apellido_materno}
+              </Text>
+              <Button type='outline' title={'Registrar cita'} titleStyle={{color:'black', fontWeight:'100', fontSize: 15}} buttonStyle={{borderColor:'#00BFFF', marginVertical:2,borderRadius:10}}onPress={()=> getId(item.id)} />
+            </Card>
+          </View>
+        )}
+      />
+      <View style={{height:80}}/>
     </View>
   );
 }

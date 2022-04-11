@@ -10,13 +10,23 @@ import app from '../../App';
 import baseURL from '../routes/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Stack = createNativeStackNavigator();
-
-var token;
+ //listo las citas
+ export function getId(id){
+  var x = id
+}
 //Defino las rutas para la navegacion por rutas.
-export default function logInScreen() {
-  const navigation = useNavigation();
+export default function logInScreen({navigation}) {
   const url = '/api/sanctum/token';
 
+  const removeItem = async()=>{
+    try{
+      const clean = await AsyncStorage.clear();
+      const status = await AsyncStorage.getItem('token');
+      console.log(status);
+    }catch(error){
+      console.log(error)
+    }
+  }
   const token = async (direccion, contrasenia) => {
     try {
       const res = await fetch(baseURL + url, {
@@ -35,6 +45,13 @@ export default function logInScreen() {
         .then(response => {
           console.log('Success: ' + response['token']);
           saveData(response['token'])
+         if(response['token'] == null){
+           alert('Algo saló mal')
+         }else{
+           getId(response['0'])
+           alert('Bienvenido: '+response['1']+ " "+ response['2']+ " "+ response['3'])
+           navigation.navigate('home')
+         }
         });
     } catch (error) {
       console.log(error);
@@ -63,9 +80,10 @@ export default function logInScreen() {
       console.log(e)
     }
   }
-
-  const [name, setname] = useState('');
-  const [pass, setpass] = useState('');
+  
+  const [name, setname] = useState(''); //obtiene el email
+  const [pass, setpass] = useState(''); //obtiene la contraseña
+  removeItem();
   return (
     
     <View style={{flex: 1, width: '100%'}}>
@@ -139,7 +157,7 @@ export default function logInScreen() {
               width: 300,
               borderColor: 'white',
             }}
-            onPress={()=>getToken().then(token =>{console.log(token)})}
+            onPress={()=>navigation.navigate('register')}
           />
         </Card>
         <View style={{top: 10, flexDirection: 'row'}}>
@@ -168,14 +186,10 @@ export default function logInScreen() {
             style={{marginHorizontal: 10}}
           />
         </View>
-        {AsyncStorage.getItem('token')!=null && navigation.navigate("home")}
-        {AsyncStorage.getItem('token')==null && navigation.navigate("login")}
-        
       </ImageBackground>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   image: {flex: 1, justifyContent: 'center', alignItems: 'center'},
 });

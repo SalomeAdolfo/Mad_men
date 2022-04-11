@@ -8,6 +8,9 @@ import Icon  from 'react-native-vector-icons/FontAwesome';
 import { Card } from 'react-native-elements';
 import LoginStack from './src/stacks/LoginStack'
 import homestack from './src/stacks/HomeStack'
+import RegisterScreen from './src/screen/RegisterScreen';
+import UserStackScreen from './src/stacks/UserStackScreen';
+
 const Stack = createNativeStackNavigator();
 
 
@@ -21,6 +24,8 @@ export default function App() {
     }}>
       <Stack.Screen name="login" component={LoginStack} />
       <Stack.Screen name="home" component={homestack} />
+      <Stack.Screen name='register' component={RegisterScreen} />
+      <Stack.Screen name='user' component={UserStackScreen} />
     </Stack.Navigator>
   </NavigationContainer>
   );
